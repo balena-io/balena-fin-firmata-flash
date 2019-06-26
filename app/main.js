@@ -1,6 +1,6 @@
 const readline = require('readline');
 const Firmata = require("firmata");
-const board = new Firmata("/dev/ttyS0");
+const board = new Firmata(process.env.FIRMATA_DEVICE || "/dev/ttyS0");
 
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);

@@ -37,4 +37,4 @@ set digital pin state on the coprocessor header.
 * `pin` (integer) is the `Expansion Header` pin numbering as shown in the image below.
 * `state` (integer) is either 1 (on) or 0 (off)
 
-![Coprocessor EXP Header](exp_header.png "Coprocessor EXP Header")
+Reference for the pin numbers relating to the GPIO `Expansion Header` can be found in the [firmata source](https://github.com/balena-io/balena-fin-coprocessor-firmata#firmata-pin-map) repository.

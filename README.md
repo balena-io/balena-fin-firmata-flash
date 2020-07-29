@@ -28,6 +28,7 @@ _POST_ `/v1/sleep/:delay/:timeout`
 triggers the balenaFin power saving mode.
 * `delay` (integer) is the amount of seconds the co-processor will wait before shutting down the linux side (CM3/CM3+)
 * `timeout` (integer) is the amount of seconds the co-processor will keep the linux side (CM3/CM3+) shut down before bringing it back up. There is a limit of 97 years (3,058,992,000 seconds) as the max value the co-processor can handle
+* you can override update checks that would otherwise prevent the sleep from being triggered passing `force` in the body of the request: `{"force":1}`
 
 ##### set pin
 

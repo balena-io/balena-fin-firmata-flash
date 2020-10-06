@@ -17,13 +17,19 @@ const Flasher = require(__dirname + '/flasher.js');
 const app = express();
 const flasher = Flasher(BALENA_FIN_REVISION, supervisor, firmata);
 
-const shutdown = (delay, timeout) => {
-  return supervisor.checkForOngoingUpdate()
+const shutdown = (delay, timeout, force) => {
+  if (force) {
+    firmata.sleep(parseInt(delay), parseInt(timeout));
+        return supervisor.shutdown();
+  } else {
+    return supervisor.checkForOngoingUpdate()
       .then(() => {
         firmata.sleep(parseInt(delay), parseInt(timeout));
         return supervisor.shutdown();
       })
       .catch(() => { throw new Error('Device is not Idle, likely updating, will not shutdown'); });
+  }
+  
 };
 
 let setPin = function(pin,state) {
@@ -80,6 +86,7 @@ app.post('/v1/setpin/:pin/:state', (req, res) => {
 });
 
 app.post('/v1/sleep/:delay/:timeout', (req, res) => {
+  const force = (typeof req.body.force === "undefined") ? 0 : parseInt(req.body.force);
   if (!req.params.delay || !req.params.timeout) {
     return res.status(400).send('Bad Request');
   }
@@ -87,7 +94,7 @@ app.post('/v1/sleep/:delay/:timeout', (req, res) => {
     return res.status(405).send('Feature not available on current hardware revision');
   }
 
-  shutdown(req.params.delay, req.params.timeout)
+  shutdown(req.params.delay, req.params.timeout, force)
       .then(() => {
         console.error("Sleep command registered, shutting down...");
         res.status(200).send('OK');
